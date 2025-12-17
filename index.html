@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admission Information Dashboard</title>
+    <link rel="shortcut icon" href="pic.png" type="image/x-icon">
+    <link rel="icon" href="pic.png">
+    <link rel="apple-touch-icon" href="pic.png">
+    <style>
+        :root {
+            --primary: #00d2ff;
+            --secondary: #3a7bd5;
+            --success: #00ff87;
+            --danger: #ff416c;
+            --glass: rgba(255, 255, 255, 0.15);
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(45deg, #0f0c29, #302b63, #24243e);
+            background-attachment: fixed;
+            margin: 0;
+            padding: 40px 10px;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 10%; left: 10%;
+            width: 300px; height: 300px;
+            background: var(--primary);
+            filter: blur(150px);
+            opacity: 0.2;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            background: linear-gradient(to right, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .marquee-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #e0e0e0;
+            padding: 12px;
+            border-radius: 50px;
+            font-weight: 500;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .table-container {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        thead {
+            background: linear-gradient(to right, #3a7bd5, #00d2ff);
+        }
+
+        th {
+            padding: 18px;
+            font-weight: 700;
+            color: white;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            text-align: left;
+        }
+
+        td {
+            padding: 15px 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .uni-name {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .credential {
+            font-family: 'Consolas', monospace;
+            background: rgba(255, 65, 108, 0.2);
+            border: 1px solid rgba(255, 65, 108, 0.3);
+            color: #ff9a9e;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .status-pill {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .done { background: rgba(0, 255, 135, 0.15); color: #00ff87; border: 1px solid rgba(0, 255, 135, 0.3); }
+        .pending { background: rgba(14, 165, 233, 0.15); color: #7dd3fc; border: 1px solid rgba(14, 165, 233, 0.3); }
+
+        .btn {
+            display: inline-block;
+            padding: 8px 15px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        /* Login Button - Blue */
+        .login-btn {
+            background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 210, 255, 0.2);
+        }
+
+        /* Admit Card Button - Green */
+        .admit-btn {
+            background: linear-gradient(135deg, #00ff87 0%, #60efff 100%);
+            color: #0f2027;
+            box-shadow: 0 4px 10px rgba(0, 255, 135, 0.2);
+        }
+
+        .disabled-btn {
+            background: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.4);
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn:hover:not(.disabled-btn) {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .table-container { border-radius: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="marquee-box">
+            📢 আবেদন করা সকল ইউনিভার্সিটি এর Username এবং Password একত্রিত করে এখানে রাখা হয়েছে
+        </div>
+        <h1>Admission Hub</h1>
+    </header>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>University</th>
+                    <th>User ID / Pin</th>
+                    <th>Password</th>
+                    <th>Status</th>
+                    <th>Admission Link</th>
+                    <th>Admit Card Link</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="uni-name">Medical</td>
+                    <td>SVOYEF</td>
+                    <td><span class="credential">MHICDNIZSS</span></td>
+                    <td><span class="status-pill done">Admit Card Done</span></td>
+                    <td><a href="https://dgme.teletalk.com.bd/mbbs/index.php" class="btn login-btn">Login</a></td>
+                    <td><a href="https://dgme.teletalk.com.bd/mbbs/admitcard/index.php" class="btn admit-btn">Download</a></td>
+                </tr>
+                <tr>
+                    <td class="uni-name">1. Khulna Uni</td>
+                    <td>335734</td>
+                    <td><span class="credential">2468</span></td>
+                    <td><span class="status-pill done">Admit Card Done</span></td>
+                    <td><a href="https://apply.ku.ac.bd/app/login" class="btn login-btn">Login</a></td>
+                    <td><a href="https://apply.ku.ac.bd/app/admit-card" class="btn admit-btn">Download</a></td>
+                </tr>
+                <tr>
+                    <td class="uni-name">2. MIST</td>
+                    <td>QTXLBA</td>
+                    <td><span class="credential">A99924M</span></td>
+                    <td><span class="status-pill done">Admit Card Done</span></td>
+                    <td><a href="http://mist.teletalk.com.bd/" class="btn login-btn">Login</a></td>
+                    <td><a href="http://mist.teletalk.com.bd/admitcard/index.php" class="btn admit-btn">Download</a></td>
+                </tr>
+                <tr>
+                    <td class="uni-name">3. Maritime</td>
+                    <td>C-GOJSW</td>
+                    <td><span class="credential">NBNKRW</span></td>
+                    <td><span class="status-pill pending">Feb 2-29</span></td>
+                    <td><a href="https://applyonline.bmu.edu.bd/Admission/Login" class="btn login-btn">Login</a></td>
+                    <td><a href="#" class="btn disabled-btn">Available Feb</a></td>
+                </tr>
+                <tr>
+                    <td class="uni-name">4. HSTU</td>
+                    <td>1002508</td>
+                    <td><span class="credential">n2423g</span></td>
+                    <td><span class="status-pill pending">Pending</span></td>
+                    <td><a href="https://admission.hstu.ac.bd/home/login" class="btn login-btn">Login</a></td>
+                    <td><a href="#" class="btn disabled-btn">Wait</a></td>
+                </tr>
+                <tr>
+                    <td class="uni-name">5. RU</td>
+                    <td>261086972</td>
+                    <td><span class="credential">THuGH5FD</span></td>
+                    <td><span class="status-pill done">Admit Card Done</span></td>
+                    <td><a href="https://admission.ru.ac.bd/student/login" class="btn login-btn">Login</a></td>
+                    <td><a href="https://admission.ru.ac.bd/student/admit_card" class="btn admit-btn">Download</a></td>
+                </tr>
+                <tr>
+                    <td class="uni-name">6. JU</td>
+                    <td>01757976927</td>
+                    <td><span class="credential">392230</span></td>
+                    <td><span class="status-pill done">Admit Card Done</span></td>
+                    <td><a href="https://ju-admission.org/user/login" class="btn login-btn">Login</a></td>
+                    <td><a href="https://ju-admission.org/admitcard" class="btn admit-btn">Download</a></td>
+                </tr>
+                <tr>
+                    <td class="uni-name">7. Agriculture</td>
+                    <td>Pin: 634097</td>
+                    <td><span class="credential">198199</span></td>
+                    <td><span class="status-pill pending">27 Dec</span></td>
+                    <td><a href="https://acas.edu.bd/signin" class="btn login-btn">Login</a></td>
+                    <td><a href="#" class="btn disabled-btn">Dec 27</a></td>
+                </tr>
+                <tr>
+                    <td class="uni-name">8. AAUB</td>
+                    <td>BKCUTGI</td>
+                    <td><span class="credential">L962795J</span></td>
+                    <td><span class="status-pill done">Admit Card Done</span></td>
+                    <td><a href="http://aaub.teletalk.com.bd/" class="btn login-btn">Login</a></td>
+                    <td><a href="http://aaub.teletalk.com.bd/bsc/admitcard/index.php" class="btn admit-btn">Download</a></td>
+                </tr>
+                <tr>
+                    <td class="uni-name">9. CU</td>
+                    <td>din24153864</td>
+                    <td><span class="credential">g9z96xd6</span></td>
+                    <td><span class="status-pill pending">21 Dec</span></td>
+                    <td><a href="https://admission.cu.ac.bd/" class="btn login-btn">Login</a></td>
+                    <td><a href="#" class="btn disabled-btn">Dec 21</a></td>
+                </tr>
+                <tr>
+                    <td class="uni-name">10. SUST</td>
+                    <td>din24153864</td>
+                    <td><span class="credential">Ab9fyqB7</span></td>
+                    <td><span class="status-pill pending">Wait</span></td>
+                    <td><a href="https://admission.sust.edu.bd/signin" class="btn login-btn">Login</a></td>
+                    <td><a href="#" class="btn disabled-btn">N/A</a></td>
+                </tr>
+                <tr>
+                    <td class="uni-name">11. GST</td>
+                    <td>3318876</td>
+                    <td><span class="credential">CJV9K2</span></td>
+                    <td><span class="status-pill pending">Pending</span></td>
+                    <td><a href="https://gstadmission.ac.bd/login-with-id" target="_blank" class="btn login-btn">Login</a></td>
+                    <td><a href="#" class="btn disabled-btn">N/A</a></td>
+                </tr>
+                 <tr>
+                    <td class="uni-name">13. BUP</td>
+                    <td>C-CUJYT618932</td>
+                    <td><span class="credential">3BFTT9F</span></td>
+                    <td><span class="status-pill done">Before exam</span></td>
+                    <td><a href="https://admission.bup.edu.bd/Admission/Login" class="btn login-btn">Login</a></td>
+                    <td><a href="#" class="btn disabled-btn">Pending</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
